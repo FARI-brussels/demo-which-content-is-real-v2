@@ -8,7 +8,7 @@
       </template>
 
       <template #center>
-        <p class="font-size-subtitle">Score: {{ realImageCounter }}</p>
+        <p v-if="!gameEnded" class="font-size-subtitle">Score: {{ realImageCounter }}</p>
       </template>
       <template #right>
         <FLanguageSelector :locale="CMS.locale" @update:locale="setLocale" class="locale-item" />
