@@ -1,5 +1,5 @@
 <template>
-  <div class="layout bg-color-blue mt-md" v-if="currentPairExists">
+  <div class="layout bg-color-blue" v-if="currentPairExists">
     <ToolBar class="toolbar">
       <template #left>
         <div class="container-left">
@@ -9,6 +9,9 @@
 
       <template #center>
         <p class="font-size-subtitle">Score: {{ realImageCounter }}</p>
+      </template>
+      <template #right>
+        <FLanguageSelector @update:locale="setLocale" class="locale-item" />
       </template>
     </ToolBar>
 
@@ -154,8 +157,8 @@
       <div class="image last-pic">
         <img :src="lastPic.url" class="rounded-s" />
         <div class="speech-bubble-text color-black font-size-body">
-          <p class="font-weight-bold">Thanks for playing!</p>
-          <p>You scored {{ realImageCounter }}</p>
+          <p class="font-weight-bold">{{ CMS.data.endGameText.title[CMS.locale] }}</p>
+          <p>{{ CMS.data.endGameText.subtitle[CMS.locale] }} {{ realImageCounter }}</p>
         </div>
       </div>
     </div>
@@ -165,7 +168,11 @@
       @click="nextPair"
       on-dark
       :disabled="!currentPairExists || !imageSelected"
-      :label="currentIndex === shuffledPairs.length - 1 ? 'Finish game' : 'Next'"
+      :label="
+        currentIndex === shuffledPairs.length - 1
+          ? CMS.data.finishButton[CMS.locale]
+          : CMS.data.nextButton[CMS.locale]
+      "
       class="mt-xl"
     />
 
@@ -175,7 +182,7 @@
       on-dark
       :disabled="!currentPairExists || !imageSelected"
       class="mt-xl"
-      label="Back to home"
+      :label="CMS.data.homeButton[CMS.locale]"
     />
   </div>
 </template>
@@ -184,7 +191,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useGameStore } from '@/stores/game'
-import { FButton } from 'fari-component-library'
+import { FButton, FLanguageSelector } from 'fari-component-library'
 import ToolBar from '@/components/ToolBar.vue'
 import ChevronLeft from '@/components/ChevronLeft.vue'
 import CheckIcon from '@/components/CheckIcon.vue'
@@ -192,7 +199,9 @@ import CrossIcon from '@/components/CrossIcon.vue'
 
 type Content = { url: string; caption: string }
 
-const { real, fake } = storeToRefs(useGameStore())
+const { real, fake, CMS } = storeToRefs(useGameStore())
+const { setLocale } = useGameStore()
+
 const shuffledPairs = ref<{ first: Content; second: Content }[]>([])
 const selectedPair = ref<number | null>(null)
 const currentIndex = ref(0)
@@ -216,7 +225,7 @@ function shuffleAndPair(real: Content[], fake: Content[]) {
 }
 
 const lastPic = {
-  url: 'src/assets/endgame2.jpg'
+  url: 'src/assets/endgame3.jpg'
 }
 
 const currentPair = computed(() => {
@@ -273,6 +282,22 @@ function isImage(content: Content) {
   position: relative;
 }
 
+/* .locale-item {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+} */
+:deep(.language-selector) {
+  color: white;
+}
+:deep(.dash) {
+  color: white;
+}
+:deep(.selected) {
+  color: white;
+  font-weight: extrabold;
+}
+
 .toolbar {
   position: absolute;
   top: 0;
@@ -327,9 +352,10 @@ video {
 }
 
 .speech-bubble-text {
+  width: 17rem;
   position: absolute;
   top: 6rem;
-  right: 5rem;
+  right: 2rem;
   text-align: center;
 }
 

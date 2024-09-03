@@ -1,15 +1,5 @@
 import { defineStore } from 'pinia'
 import type { Locale } from '../types/Locale'
-// import type {
-//   DrawGridRequest,
-//   DrawGridResponse,
-//   PlayMoveRequest,
-//   PlayMoveResponse,
-//   GameState,
-//   Player,
-//   HumanPlayer,
-//   RobotPlayer
-// } from '../types/Game'
 
 export const useGameStore = defineStore('game', {
   state: () => ({
@@ -19,6 +9,48 @@ export const useGameStore = defineStore('game', {
       locale: 'en',
       data: {
         logo: '',
+        title: {
+          en: 'Which content is real?',
+          'fr-FR': 'Quel contenu est réel ?',
+          nl: 'Welke inhoud is echt?'
+        },
+        subtitle: {
+          en: 'AI Education',
+          'fr-FR': 'Éducation en IA',
+          nl: 'AI-onderwijs'
+        },
+        startButton: {
+          en: 'Start',
+          'fr-FR': 'Commencer',
+          nl: 'Begin'
+        },
+        nextButton: {
+          en: 'Next',
+          'fr-FR': 'Suivant',
+          nl: 'Volgende'
+        },
+        finishButton: {
+          en: 'Finish',
+          'fr-FR': 'Finition',
+          nl: 'Finish'
+        },
+        homeButton: {
+          en: 'Back to home',
+          'fr-FR': 'Terug naar de homepage',
+          nl: "Retour à la page d'accueil"
+        },
+        endGameText: {
+          title: {
+            en: 'Thanks for playing!',
+            'fr-FR': "Merci d'avoir joué !",
+            nl: 'Bedankt voor het spelen!'
+          },
+          subtitle: {
+            en: 'Your final score is',
+            'fr-FR': 'Votre score final est',
+            nl: 'Je eindscore is'
+          }
+        },
         research_head: '',
         research_lead: '',
         explanation_short: {

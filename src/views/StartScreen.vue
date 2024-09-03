@@ -1,17 +1,24 @@
 <template>
   <div class="start-screen">
+    <FLanguageSelector @update:locale="setLocale" class="locale-item" />
     <video autoplay muted loop class="background-video">
       <source src="../assets/OXOplayer.mp4" type="video/mp4" />
     </video>
     <div class="heading">
       <div class="title">
-        <FTitle class="title"> Which content is real?</FTitle>
+        <FTitle class="title"> {{ CMS.data.title[CMS.locale] }}</FTitle>
         <FButtonIcon name="tooltip" color="blue-light" class="tooltip" @click="toggleCard" />
       </div>
-      <FSubTitle class="subtitle"> AI Education </FSubTitle>
+      <FSubTitle class="subtitle"> {{ CMS.data.subtitle[CMS.locale] }} </FSubTitle>
     </div>
 
-    <FButton label="Start" type="primary" class="start-button" on-dark @click="startGame" />
+    <FButton
+      :label="CMS.data.startButton[CMS.locale]"
+      type="primary"
+      class="start-button"
+      on-dark
+      @click="startGame"
+    />
 
     <FSlideTransition :show="showCard">
       <FCard v-if="showCard" @close="toggleCard" @update:locale="setLocale" class="card">
@@ -32,7 +39,8 @@ import {
   FButtonIcon,
   FFooter,
   FSlideTransition,
-  FCard
+  FCard,
+  FLanguageSelector
 } from 'fari-component-library'
 import { useGameStore } from '@/stores/game'
 import { storeToRefs } from 'pinia'
@@ -55,6 +63,22 @@ const toggleCard = () => (showCard.value = !showCard.value)
 </script>
 
 <style scoped lang="scss">
+.locale-item {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+}
+:deep(.language-selector) {
+  color: white;
+}
+:deep(.dash) {
+  color: white;
+}
+:deep(.selected) {
+  color: white;
+  font-weight: extrabold;
+}
+
 .background-video {
   position: absolute;
   top: 0;
@@ -125,4 +149,8 @@ const toggleCard = () => (showCard.value = !showCard.value)
     transition: all 300ms;
   }
 }
+
+// .language-button {
+//   padding: 1rem;
+// }
 </style>
