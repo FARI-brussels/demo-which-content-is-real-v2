@@ -36,8 +36,8 @@ export const useGameStore = defineStore('game', {
         },
         homeButton: {
           en: 'Back to home',
-          'fr-FR': 'Terug naar de homepage',
-          nl: "Retour à la page d'accueil"
+          nl: 'Terug naar de homepage',
+          'fr-FR': "Retour à la page d'accueil"
         },
         endGameText: {
           title: {

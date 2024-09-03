@@ -11,7 +11,7 @@
         <p class="font-size-subtitle">Score: {{ realImageCounter }}</p>
       </template>
       <template #right>
-        <FLanguageSelector @update:locale="setLocale" class="locale-item" />
+        <FLanguageSelector :locale="CMS.locale" @update:locale="setLocale" class="locale-item" />
       </template>
     </ToolBar>
 
