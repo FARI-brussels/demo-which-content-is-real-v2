@@ -1,111 +1,181 @@
 <template>
-  <div class="layout bg-color-blue" v-if="currentPairExists">
-    <p class="font-size-subtitle">Score: {{ realImageCounter }}</p>
+  <div class="layout bg-color-blue mt-md" v-if="currentPairExists">
+    <ToolBar class="toolbar">
+      <template #left>
+        <div class="container-left">
+          <ChevronLeft @click="$emit('exit-demo')" color="white" />
+        </div>
+      </template>
+
+      <template #center>
+        <p class="font-size-subtitle">Score: {{ realImageCounter }}</p>
+      </template>
+    </ToolBar>
+
     <div
       class="image-pair-container mx-xl"
       :style="{ transform: `translateX(-${currentIndex * 100}%)` }"
     >
-      <div v-for="({ first, second }, index) in shuffledPairs" :key="index" class="image-pair">
-        <div v-if="isImage(first)" class="image">
-          <img
-            :src="first.url"
-            class="rounded-s"
-            :class="{
-              'real-image': selectedPair === index && isSelectedReal(first),
-              'fake-image': selectedPair === index && !isSelectedReal(first)
-            }"
-            @click="selectImage(first, index)"
-          />
-          <p
-            class="caption font-weight-medium font-size-body"
-            :class="{ 'caption-visible': imageSelected }"
-          >
-            {{ first.caption }}
-          </p>
-        </div>
-        <div v-else class="image">
-          <video
-            :src="first.url"
-            class="rounded-s"
-            controls
-            loop
-            :class="{
-              'real-image': selectedPair === index && isSelectedReal(first),
-              'fake-image': selectedPair === index && !isSelectedReal(first)
-            }"
-            @touchstart="selectImage(first, index)"
-            @click="
-              (e) => {
-                e.preventDefault()
-                selectImage(first, index)
-              }
-            "
-          />
-          <p
-            class="caption font-weight-medium font-size-body"
-            :class="{ 'caption-visible': imageSelected }"
-          >
-            {{ first.caption }}
-          </p>
-        </div>
+      <template v-if="!gameEnded">
+        <div v-for="({ first, second }, index) in shuffledPairs" :key="index" class="image-pair">
+          <div v-if="isImage(first)" class="image-wrapper">
+            <div class="image">
+              <img :src="first.url" class="rounded-s" @click="selectImage(first, index)" />
+              <Transition>
+                <CheckIcon
+                  v-if="selectedPair === index && isSelectedReal(first)"
+                  class="check-icon icon"
+                  color="green"
+                />
+              </Transition>
+              <Transition>
+                <CrossIcon
+                  v-if="selectedPair === index && !isSelectedReal(first)"
+                  color="red"
+                  class="cross-icon icon"
+                />
+              </Transition>
+            </div>
+            <p
+              class="caption font-weight-medium font-size-body"
+              :class="{ 'caption-visible': imageSelected }"
+            >
+              {{ first.caption }}
+            </p>
+          </div>
+          <div v-else class="image-wrapper">
+            <div class="image">
+              <video
+                :src="first.url"
+                class="rounded-s"
+                controls
+                loop
+                autoplay
+                muted
+                @touchstart="selectImage(first, index)"
+                @click="
+                  (e) => {
+                    e.preventDefault()
+                    selectImage(first, index)
+                  }
+                "
+              />
+              <Transition>
+                <CheckIcon
+                  class="check-icon icon"
+                  v-if="selectedPair === index && isSelectedReal(first)"
+                  color="green"
+                />
+              </Transition>
+              <Transition>
+                <CrossIcon
+                  v-if="selectedPair === index && !isSelectedReal(first)"
+                  color="red"
+                  class="cross-icon icon"
+                />
+              </Transition>
+            </div>
+            <p
+              class="caption font-weight-medium font-size-body"
+              :class="{ 'caption-visible': imageSelected }"
+            >
+              {{ first.caption }}
+            </p>
+          </div>
 
-        <div v-if="isImage(second)" class="image">
-          <img
-            :src="second?.url"
-            class="rounded-s"
-            :class="{
-              'real-image': selectedPair === index && isSelectedReal(second),
-              'fake-image': selectedPair === index && !isSelectedReal(second)
-            }"
-            @click="selectImage(second, index)"
-          />
-          <p
-            class="caption font-weight-medium font-size-body"
-            :class="{ 'caption-visible': imageSelected }"
-          >
-            {{ second.caption }}
-          </p>
+          <div v-if="isImage(second)" class="image-wrapper">
+            <div class="image">
+              <img :src="second?.url" class="rounded-s" @click="selectImage(second, index)" />
+              <Transition>
+                <CheckIcon
+                  v-if="selectedPair === index && isSelectedReal(second)"
+                  class="check-icon icon"
+                  color="green"
+                />
+              </Transition>
+              <Transition>
+                <CrossIcon
+                  v-if="selectedPair === index && !isSelectedReal(second)"
+                  color="red"
+                  class="cross-icon icon"
+                />
+              </Transition>
+            </div>
+            <p
+              class="caption font-weight-medium font-size-body"
+              :class="{ 'caption-visible': imageSelected }"
+            >
+              {{ second.caption }}
+            </p>
+          </div>
+          <div v-else class="image-wrapper">
+            <div class="image">
+              <video
+                :src="second?.url"
+                class="rounded-s"
+                controls
+                loop
+                autoplay
+                muted
+                @touchstart="selectImage(first, index)"
+                @click="
+                  (e) => {
+                    e.preventDefault()
+                    selectImage(first, index)
+                  }
+                "
+              />
+              <Transition>
+                <CheckIcon
+                  class="check-icon icon"
+                  v-if="selectedPair === index && isSelectedReal(second)"
+                  color="green"
+                />
+              </Transition>
+              <Transition>
+                <CrossIcon
+                  v-if="selectedPair === index && !isSelectedReal(second)"
+                  color="red"
+                  class="cross-icon icon"
+                />
+              </Transition>
+            </div>
+            <p
+              class="caption font-weight-medium font-size-body"
+              :class="{ 'caption-visible': imageSelected }"
+            >
+              {{ second.caption }}
+            </p>
+          </div>
         </div>
-        <div v-else class="image">
-          <video
-            :src="second?.url"
-            class="rounded-s"
-            controls
-            loop
-            :class="{
-              'real-image': selectedPair === index && isSelectedReal(second),
-              'fake-image': selectedPair === index && !isSelectedReal(second)
-            }"
-            @touchstart="selectImage(first, index)"
-            @click="
-              (e) => {
-                e.preventDefault()
-                selectImage(first, index)
-              }
-            "
-          />
-          <p
-            class="caption font-weight-medium text-body"
-            :class="{ 'caption-visible': imageSelected }"
-          >
-            {{ second.caption }}
-          </p>
+      </template>
+    </div>
+    <div v-if="gameEnded">
+      <div class="image last-pic">
+        <img :src="lastPic.url" class="rounded-s" />
+        <div class="speech-bubble-text color-black font-size-body">
+          <p class="font-weight-bold">Thanks for playing!</p>
+          <p>You scored {{ realImageCounter }}</p>
         </div>
       </div>
     </div>
+
     <FButton
-      v-if="currentIndex !== shuffledPairs.length - 1"
+      v-if="!gameEnded"
       @click="nextPair"
       on-dark
       :disabled="!currentPairExists || !imageSelected"
-      label="next"
+      :label="currentIndex === shuffledPairs.length - 1 ? 'Finish game' : 'Next'"
+      class="mt-xl"
     />
+
     <FButton
-      v-else
-      @click="restart"
+      v-if="gameEnded"
+      @click="$emit('exit-demo')"
       on-dark
       :disabled="!currentPairExists || !imageSelected"
-      label="restart"
+      class="mt-xl"
+      label="Back to home"
     />
   </div>
 </template>
@@ -115,6 +185,10 @@ import { ref, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useGameStore } from '@/stores/game'
 import { FButton } from 'fari-component-library'
+import ToolBar from '@/components/ToolBar.vue'
+import ChevronLeft from '@/components/ChevronLeft.vue'
+import CheckIcon from '@/components/CheckIcon.vue'
+import CrossIcon from '@/components/CrossIcon.vue'
 
 type Content = { url: string; caption: string }
 
@@ -125,9 +199,7 @@ const currentIndex = ref(0)
 const realImageCounter = ref(0)
 const imageSelected = ref(false)
 
-function restart() {
-  window.location.reload()
-}
+const gameEnded = ref(false)
 
 function shuffleAndPair(real: Content[], fake: Content[]) {
   const pairs: { first: Content; second: Content }[] = []
@@ -141,6 +213,10 @@ function shuffleAndPair(real: Content[], fake: Content[]) {
   }
 
   return pairs
+}
+
+const lastPic = {
+  url: 'src/assets/endgame2.jpg'
 }
 
 const currentPair = computed(() => {
@@ -173,7 +249,7 @@ function nextPair() {
     imageSelected.value = false
     currentIndex.value++
   } else {
-    // Handle end of game scenario
+    gameEnded.value = true
   }
 }
 
@@ -197,6 +273,12 @@ function isImage(content: Content) {
   position: relative;
 }
 
+.toolbar {
+  position: absolute;
+  top: 0;
+  width: 100vw;
+}
+
 .image-pair-container {
   display: flex;
   align-items: center;
@@ -214,6 +296,13 @@ function isImage(content: Content) {
 
 .image {
   width: 600px;
+  position: relative;
+}
+
+.icon {
+  position: absolute;
+  bottom: -1rem;
+  right: -1rem;
 }
 
 img,
@@ -233,12 +322,41 @@ video {
   border: 5px solid #f00;
 }
 
-.caption {
-  opacity: 0;
-
-  transition: all 0.2s ease-in;
+.last-pic {
+  position: relative;
 }
+
+.speech-bubble-text {
+  position: absolute;
+  top: 6rem;
+  right: 5rem;
+  text-align: center;
+}
+
+.caption {
+  position: absolute;
+  top: 39rem;
+  opacity: 0;
+  transition: all 0.2s ease-in;
+  width: 600px;
+}
+
 .caption-visible {
   opacity: 1;
+}
+
+.caption-last {
+  text-align: center;
+  font-weight: bold;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>

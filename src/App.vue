@@ -1,9 +1,7 @@
 <template>
   <div class="layout bg-color-blue">
-    <Transition :name="transitionName">
-      <StartScreen v-if="startScreenVisible" @start-game="startGame" />
-      <GameScreen v-else @exit-game="exitGame" />
-    </Transition>
+    <StartScreen v-if="startScreenVisible" @start-game="startGame" />
+    <GameScreen v-else @exit-demo="exitGame" />
   </div>
 </template>
 
