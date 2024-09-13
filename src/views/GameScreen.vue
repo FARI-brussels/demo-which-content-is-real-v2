@@ -1,20 +1,11 @@
 <template>
   <div class="layout bg-color-blue" v-if="currentPairExists">
-    <ToolBar class="toolbar">
-      <template #left>
-        <div class="container-left">
-          <ChevronLeft @click="$emit('exit-demo')" color="white" />
-        </div>
-      </template>
-
-      <template #center>
-        <p v-if="!gameEnded" class="font-size-subtitle">Score: {{ realImageCounter }}</p>
-      </template>
-      <template #right>
+    <FDemoAppBar @exit="$emit('exit-demo')">
+      <p v-if="!gameEnded" class="font-size-subtitle">Score: {{ realImageCounter }}</p>
+      <template #actions>
         <FLanguageSelector :locale="CMS.locale" @update:locale="setLocale" class="locale-item" />
       </template>
-    </ToolBar>
-
+    </FDemoAppBar>
     <div
       class="image-pair-container mx-xl"
       :style="{ transform: `translateX(-${currentIndex * 100}%)` }"
@@ -191,7 +182,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useGameStore } from '@/stores/game'
-import { FButton, FLanguageSelector } from 'fari-component-library'
+import { FButton, FLanguageSelector, FDemoAppBar } from 'fari-component-library'
 import ToolBar from '@/components/ToolBar.vue'
 import ChevronLeft from '@/components/ChevronLeft.vue'
 import CheckIcon from '@/components/CheckIcon.vue'
@@ -282,11 +273,11 @@ function isImage(content: Content) {
   position: relative;
 }
 
-/* .locale-item {
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-} */
+.font-size-subtitle {
+  width: fit-content;
+    margin-left: auto;
+    margin-right: 46rem
+}
 :deep(.language-selector) {
   color: white;
 }
@@ -298,10 +289,9 @@ function isImage(content: Content) {
   font-weight: extrabold;
 }
 
-.toolbar {
+.app-bar {
   position: absolute;
-  top: 0;
-  width: 100vw;
+  top: 2rem;
 }
 
 .image-pair-container {
