@@ -111,11 +111,11 @@
                 loop
                 autoplay
                 muted
-                @touchstart="selectImage(first, index)"
+                @touchstart="selectImage(second, index)"
                 @click="
                   (e) => {
                     e.preventDefault()
-                    selectImage(first, index)
+                    selectImage(second, index)
                   }
                 "
               />
@@ -183,8 +183,6 @@ import { ref, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useGameStore } from '@/stores/game'
 import { FButton, FLanguageSelector, FDemoAppBar } from 'fari-component-library'
-import ToolBar from '@/components/ToolBar.vue'
-import ChevronLeft from '@/components/ChevronLeft.vue'
 import CheckIcon from '@/components/CheckIcon.vue'
 import CrossIcon from '@/components/CrossIcon.vue'
 
