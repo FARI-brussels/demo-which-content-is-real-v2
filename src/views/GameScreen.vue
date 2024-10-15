@@ -1,7 +1,7 @@
 <template>
   <div class="layout bg-color-blue" v-if="currentPairExists">
     <FDemoAppBar @exit="$emit('exit-demo')">
-      <p v-if="!gameEnded" class="font-size-subtitle">Score: {{ realImageCounter }}</p>
+      <p v-if="!gameEnded" class="font-size-subtitle">Score: {{ realImageCounter }} / 10</p>
       <template #actions>
         <FLanguageSelector :locale="CMS.locale" @update:locale="setLocale" class="locale-item" />
       </template>
