@@ -23,6 +23,12 @@
     <FSlideTransition :show="showCard">
       <FCard v-if="showCard" @close="toggleCard" @update:locale="setLocale" class="card">
         {{ CMS.data.explanation_short[CMS.locale] }}
+
+        <div class="researchers-container">
+          <span class="researchers">
+            research lead: <span class="research-lead color-black"> {{ CMS.data.research_lead }} </span>
+          </span>
+        </div>
         <template #footer> <div v-if="CMS.data.logo" v-html="CMS.data.logo"></div> </template>
       </FCard>
     </FSlideTransition>
@@ -149,6 +155,13 @@ const toggleCard = () => (showCard.value = !showCard.value)
     transition: all 300ms;
   }
 }
+
+.researchers-container {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+}
+
 
 // .language-button {
 //   padding: 1rem;
