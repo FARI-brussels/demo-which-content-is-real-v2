@@ -137,16 +137,30 @@ export const useGameStore = defineStore('game', {
 
 
 async function fetchMedia(mediaUrl, mediaAmount) {
-  const data = await fetch(`${mediaUrl}?populate=*`).then((response) => response.json())
-  shuffle(data.data)
+  let data = [];
+  let page = 1;
+  let hasMore = true;
+
+  while (hasMore) {
+    const response = await fetch(`${mediaUrl}?populate=*&pagination[page]=${page}&pagination[pageSize]=25`)
+      .then((response) => response.json());
+
+    data = data.concat(response.data);
+
+    // Check if there are more items to fetch
+    hasMore = response.meta.pagination.page < response.meta.pagination.pageCount;
+    page += 1;
+} 
+  console.log(data)
+  shuffle(data)
   type Content = { url: string; caption: string }
   const real = [] as Content[]
   const fake = [] as Content[]
 
-  const length = Math.min(mediaAmount, data.data.length)
+  const length = Math.min(mediaAmount, data.length)
 
   for (let i = 0; i < length; i++) {
-    const item = data.data[i]
+    const item = data[i]
     real.push({
       url: baseUrl + item.attributes.realContent.data.attributes.url,
       caption: item.attributes.realContent.data.attributes.caption || ''
