@@ -15,11 +15,13 @@
     "backend:dev": "nodemon --watch server --exec tsx ./server/server.ts"
   },
   "dependencies": {
+    "@directus/sdk": "^18.0.3",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "fari-component-library": "^0.6.7",
+    "fari-directus-parser": "^1.0.66",
     "nodemon": "^3.1.4",
     "pinia": "^2.1.7",
     "scss": "^0.2.4",

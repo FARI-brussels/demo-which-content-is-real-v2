@@ -6,30 +6,35 @@
     </video>
     <div class="heading">
       <div class="title">
-        <FTitle class="title"> {{ CMS.data.title[CMS.locale] }}</FTitle>
+        <FTitle v-if="data?.title" class="title"> {{ data.title[locale] }}</FTitle>
         <FButtonIcon name="tooltip" color="blue-light" class="tooltip" @click="toggleCard" />
       </div>
-      <FSubTitle class="subtitle"> {{ CMS.data.subtitle[CMS.locale] }} </FSubTitle>
+      <FSubTitle v-if="data?.topic" class="subtitle"> {{ data.topic[locale] }} </FSubTitle>
     </div>
 
-    <FButton
-      :label="CMS.data.startButton[CMS.locale]"
-      type="primary"
-      class="start-button"
-      on-dark
-      @click="startGame"
-    />
+    <FButton label="start" type="primary" class="start-button" on-dark @click="startGame" />
 
     <FSlideTransition :show="showCard">
-      <FCard v-if="showCard" @close="toggleCard" @update:locale="setLocale" class="card">
-        {{ CMS.data.explanation_short[CMS.locale] }}
+      <FCard
+        v-if="showCard && data?.description"
+        @close="toggleCard"
+        @update:locale="setLocale"
+        class="card"
+      >
+        {{ data.description[locale] }}
 
         <div class="researchers-container">
           <span class="researchers">
-            research lead: <span class="research-lead color-black"> {{ CMS.data.research_lead }} </span>
+            research lead:
+            <span class="research-lead color-black"> {{ data?.research_lead }} </span>
           </span>
+          <img v-for="sdg in data.sdg_images" :src="sdg" class="sdg" />
         </div>
-        <template #footer> <div v-if="CMS.data.logo" v-html="CMS.data.logo"></div> </template>
+        <template #footer>
+          <div v-if="data?.logos">
+            <img v-for="logo in data.logos" :src="logo" class="card-logo" />
+          </div>
+        </template>
       </FCard>
     </FSlideTransition>
     <div class="backdrop" :class="{ 'backdrop-active': showCard }"></div>
@@ -48,23 +53,21 @@ import {
   FCard,
   FLanguageSelector
 } from 'fari-component-library'
-import { useGameStore } from '@/stores/game'
+import { useCMSstore } from '@/stores/cms'
 import { storeToRefs } from 'pinia'
 import { ref, onMounted } from 'vue'
 
 const emit = defineEmits(['start-game'])
 
-const { CMS } = storeToRefs(useGameStore())
-const { getCMSData, setLocale, getMedia } = useGameStore()
+const { data, locale } = storeToRefs(useCMSstore())
+const { getData, setLocale } = useCMSstore()
 
 const showCard = ref(false)
 
-const startGame = async () => {
-  await getMedia()
-  emit('start-game')
-}
+const startGame = async () => emit('start-game')
 
-onMounted(getCMSData)
+onMounted(getData)
+
 const toggleCard = () => (showCard.value = !showCard.value)
 </script>
 
@@ -73,16 +76,19 @@ const toggleCard = () => (showCard.value = !showCard.value)
   position: absolute;
   top: 2rem;
   right: 2rem;
-}
-:deep(.language-selector) {
-  color: white;
-}
-:deep(.dash) {
-  color: white;
-}
-:deep(.selected) {
-  color: white;
-  font-weight: extrabold;
+
+  :deep(.language-selector) {
+    color: white;
+  }
+
+  :deep(.dash) {
+    color: white;
+  }
+
+  :deep(.selected) {
+    color: white;
+    font-weight: extrabold;
+  }
 }
 
 .background-video {
@@ -162,8 +168,12 @@ const toggleCard = () => (showCard.value = !showCard.value)
   flex-direction: column;
 }
 
-
-// .language-button {
-//   padding: 1rem;
-// }
+.card-logo {
+  height: 3.5rem;
+  margin-right: 2rem;
+}
+.sdg {
+  height: 3.5rem;
+  width: 3.5rem;
+}
 </style>
