@@ -1,9 +1,8 @@
 <template>
   <div class="start-screen">
     <FLanguageSelector @update:locale="setLocale" class="locale-item" />
-    <video autoplay muted loop class="background-video">
-      <source src="../assets/OXOplayer.mp4" type="video/mp4" />
-    </video>
+    <!-- <video autoplay muted loop class="background-video">
+    </video> -->
     <div class="heading">
       <div class="title">
         <FTitle v-if="data?.title" class="title"> {{ data.title[locale] }}</FTitle>
