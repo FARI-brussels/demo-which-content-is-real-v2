@@ -3,7 +3,11 @@
     <FDemoAppBar @exit="$emit('exit-demo')">
       <p v-if="!gameEnded" class="font-size-subtitle">Score: {{ realImageCounter }} / 10</p>
       <template #actions>
-        <FLanguageSelector :locale="CMS.locale" @update:locale="setLocale" class="locale-item" />
+        <FLanguageSelector
+          :locale="locale || 'en'"
+          @update:locale="setLocale"
+          class="locale-item"
+        />
       </template>
     </FDemoAppBar>
     <div
@@ -148,8 +152,8 @@
       <div class="image last-pic">
         <img :src="lastPic.url" class="rounded-s" />
         <div class="speech-bubble-text color-black font-size-body">
-          <p class="font-weight-bold">{{ CMS.data.endGameText.title[CMS.locale] }}</p>
-          <p>{{ CMS.data.endGameText.subtitle[CMS.locale] }} {{ realImageCounter }}</p>
+          <p class="font-weight-bold">{{ UITextContent.endGameText.title[locale] }}</p>
+          <p>{{ UITextContent.endGameText.subtitle[locale] }} {{ realImageCounter }}</p>
         </div>
       </div>
     </div>
@@ -161,8 +165,8 @@
       :disabled="!currentPairExists || !imageSelected"
       :label="
         currentIndex === shuffledPairs.length - 1
-          ? CMS.data.finishButton[CMS.locale]
-          : CMS.data.nextButton[CMS.locale]
+          ? UITextContent.finishButton[locale]
+          : UITextContent.nextButton[locale]
       "
       class="mt-xl"
     />
@@ -173,7 +177,7 @@
       on-dark
       :disabled="!currentPairExists || !imageSelected"
       class="mt-xl"
-      :label="CMS.data.homeButton[CMS.locale]"
+      :label="UITextContent.homeButton[locale]"
     />
   </div>
 </template>
@@ -181,15 +185,14 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useGameStore } from '@/stores/game'
+import { useCMSstore } from '@/stores/cms'
 import { FButton, FLanguageSelector, FDemoAppBar } from 'fari-component-library'
 import CheckIcon from '@/components/CheckIcon.vue'
 import CrossIcon from '@/components/CrossIcon.vue'
+import type { Content } from '@/types'
 
-type Content = { url: string; caption: string }
-
-const { real, fake, CMS } = storeToRefs(useGameStore())
-const { setLocale } = useGameStore()
+const { real, fake, data, locale } = storeToRefs(useCMSstore())
+const { setLocale } = useCMSstore()
 
 const shuffledPairs = ref<{ first: Content; second: Content }[]>([])
 const selectedPair = ref<number | null>(null)
@@ -256,6 +259,41 @@ function isImage(content: Content) {
   const extension = content.url.split('.').pop()?.toLowerCase()
   return imageExtensions.includes(extension!)
 }
+
+const UITextContent = {
+  startButton: {
+    en: 'Start',
+    'fr-FR': 'Commencer',
+    nl: 'Begin'
+  },
+  nextButton: {
+    en: 'Next',
+    fr: 'Suivant',
+    nl: 'Volgende'
+  },
+  finishButton: {
+    en: 'Finish',
+    fr: 'Finition',
+    nl: 'Finish'
+  },
+  homeButton: {
+    en: 'Back to home',
+    nl: 'Terug naar de homepage',
+    fr: "Retour à la page d'accueil"
+  },
+  endGameText: {
+    title: {
+      en: 'Thanks for playing!',
+      fr: "Merci d'avoir joué !",
+      nl: 'Bedankt voor het spelen!'
+    },
+    subtitle: {
+      en: 'Your final score is',
+      fr: 'Votre score final est',
+      nl: 'Je eindscore is'
+    }
+  }
+}
 </script>
 <style lang="css" scoped>
 .layout {
@@ -273,8 +311,8 @@ function isImage(content: Content) {
 
 .font-size-subtitle {
   width: fit-content;
-    margin-left: auto;
-    margin-right: 46rem
+  margin-left: auto;
+  margin-right: 46rem;
 }
 :deep(.language-selector) {
   color: white;
