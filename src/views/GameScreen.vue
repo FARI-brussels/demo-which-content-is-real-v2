@@ -150,7 +150,7 @@
     </div>
     <div v-if="gameEnded">
       <div class="image last-pic">
-        <img :src="lastPic.url" class="rounded-s" />
+        <img src="/endgame3.jpg" class="rounded-s" />
         <div class="speech-bubble-text color-black font-size-body">
           <p class="font-weight-bold">{{ UITextContent.endGameText.title[locale] }}</p>
           <p>{{ UITextContent.endGameText.subtitle[locale] }} {{ realImageCounter }}</p>
@@ -217,7 +217,7 @@ function shuffleAndPair(real: Content[], fake: Content[]) {
 }
 
 const lastPic = {
-  url: 'src/assets/endgame3.jpg'
+  url: '/endgame3.jpg'
 }
 
 const currentPair = computed(() => {
